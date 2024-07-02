@@ -1,10 +1,10 @@
 import os
 from box.exceptions import BoxValueError
 import yaml
-from logging import logger
+from src.logging import logger
 from box import ConfigBox
 from ensure import ensure_annotations
-from typing import Any
+from typing import Any, List
 from pathlib import Path
 
 @ensure_annotations
@@ -15,8 +15,15 @@ def read_yaml(path_to_yaml:Path) -> ConfigBox:
     try:
         with open(path_to_yaml, 'r') as file:
             content=yaml.safe_load(file)
+            print(content)
+            print(path_to_yaml)
             logger.info(f"Reading yaml file {path_to_yaml}")
-            return ConfigBox(config)    
+            return ConfigBox(content)
+            
+    except FileNotFoundError as e:
+        logger.error(f"YAML file not found: {path_to_yaml}")
+        raise e
+    
     except BoxValueError as e:
         logger.error(f"Error reading yaml file: {e}")
         raise BoxValueError(f"Error reading yaml file: {e}")
@@ -25,15 +32,15 @@ def read_yaml(path_to_yaml:Path) -> ConfigBox:
         raise e
 
 @ensure_annotations
-def create_directories(dir_path:Path,verbose=True) -> None:
+def create_directories(dir_path,verbose=True):
     '''
     Create directories if they do not exist
     '''
     try:
         for path in dir_path:
             if not os.path.exists(path):
-                logger.info(f"Creating directory {dir_path}")
-                os.makedirs(dir_path)
+                logger.info(f"Creating directory {path}")
+                os.makedirs(path)
 
     except Exception as e:
         logger.error(f"Error creating directory: {e}")
@@ -47,7 +54,7 @@ def get_size(path:Path) -> int:
     try:
         size_in_KB=round(os.path.getsize(path)/1024)
         logger.info(f"Getting size of file {path}")
-        return size
+        return size_in_KB
     except Exception as e:
         logger.error(f"Error getting size of file: {e}")
         raise e
