@@ -1,5 +1,6 @@
 from src.pipeline.phase_01_data_ingestion import DataIngestionPipeline
 from src.pipeline.phase_02_data_validation import DataValidationPipeline
+from src.pipeline.phase_03_data_transformation import DataTransformationPipeline
 from src.logging import logger
 
 STAGE_NAME="Data Ingestion Phase"
@@ -20,6 +21,17 @@ try:
     logger.info(f">>>>>>>>> {STAGE_NAME} initiated <<<<<<<<<<")
     data_validation_pipeline = DataValidationPipeline()
     data_validation_pipeline.main()
+    logger.info(f">>>>>>>>> {STAGE_NAME} completed <<<<<<<<<<")
+except Exception as e:
+    logger.exception(e)
+    raise e
+
+STAGE_NAME="Data Transformation Phase"
+
+try:
+    logger.info(f">>>>>>>>> {STAGE_NAME} initiated <<<<<<<<<<")
+    data_transformation_pipeline = DataTransformationPipeline()
+    data_transformation_pipeline.main()
     logger.info(f">>>>>>>>> {STAGE_NAME} completed <<<<<<<<<<")
 except Exception as e:
     logger.exception(e)
