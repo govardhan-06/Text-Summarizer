@@ -23,7 +23,7 @@ async def training():
     except Exception as e:
         return Response('Error occured: {e}')
 
-@app.post("/predict")
+@app.post("/summarize")
 async def predict(text:str):
     try:
         obj=PredictionPipeline()
